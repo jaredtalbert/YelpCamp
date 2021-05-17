@@ -1,13 +1,17 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
+const ejsMate = require('ejs-mate')
+const methodOverride = require('method-override')
 const Campground = require('./models/campground');
 
 const app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-app.use(express.urlencoded({extended: true}))
+app.use(express.urlencoded({extended: true}));
+app.use(methodOverride('_method'));
+app.engine('ejs', ejsMate);
 
 const dbName = 'yelpcamp';
 
@@ -56,6 +60,18 @@ app.get('/campgrounds/:id/edit', async (req, res) => {
     const campground = await Campground.findById(id)
 
     res.render('campgrounds/edit', { campground })
+})
+
+app.put('/campgrounds/:id', async (req, res) => {
+    const { id } = req.params
+    await Campground.findByIdAndUpdate(id, { ...req.body.campground})
+    res.redirect(`/campgrounds/${id}`)
+})
+
+app.delete('/campgrounds/:id', async (req, res) => {
+    const { id } = req.params
+    await Campground.findByIdAndDelete(id)
+    res.redirect('/campgrounds')
 })
 
 app.listen(3000, () => {
