@@ -37,5 +37,6 @@ const seed = async () => {
 }
 
 seed().then(() => {
+    console.log("Database successfully seeded")
     mongoose.connection.close()
 })
