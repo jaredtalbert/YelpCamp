@@ -43,24 +43,15 @@
         </div>
         <button class="btn btn-success">Submit</button>
       </form>
+      <% for (let review of campground.reviews) { %> 
+      <div class="mb-3">
+        <p>
+          Rating: <%= review.rating %> 
+      </p>
+        <p>
+            Review: <%= review.body %> 
+        </p>
+      </div>
+      <% } %> 
     </div>
   </div>
-
-  <!-- <h1>
-        <%= campground.title %>
-    </h1>
-    <h2>
-        <%= campground.location %>
-    </h2>
-
-    <img src="<%= campground.image %>" alt="">
-    <p><%= campground.description %></p>
-
-    <form action="/campgrounds/<%= campground._id %>?_method=DELETE" method="POST">
-        <button>Delete</button>
-    </form>
-
-    <footer>
-        <a href="/campgrounds/<%= campground._id %>/edit">Edit Campground</a>
-        <a href="/campgrounds">All Campgrounds</a>
-    </footer> -->
