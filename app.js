@@ -9,7 +9,6 @@ const Review = require('./models/review')
 const catchAsyncError = require('./helpers/catchAsyncError')
 const AppError = require('./helpers/AppError')
 const { campgroundSchema, reviewSchema } = require('./validation');
-const review = require('./models/review');
 
 /* ---- EXPRESS ---- */
 const app = express();
@@ -23,7 +22,8 @@ app.engine('ejs', ejsMate);
 /* ---- DATABASE ---- */
 const dbName = 'yelpcamp';
 
-mongoose.connect(`mongodb+srv://admin:admin123@cluster0.rphhm.mongodb.net/${dbName}?retryWrites=true&w=majority`, {
+// mongoose.connect(`mongodb+srv://admin:admin123@cluster0.rphhm.mongodb.net/${dbName}?retryWrites=true&w=majority`, {
+    mongoose.connect(`mongodb://localhost:27017/${dbName}`, {
     useNewUrlParser: true,
     useCreateIndex: true,
     useUnifiedTopology: true
@@ -123,6 +123,17 @@ app.post('/campgrounds/:id/reviews', validateReview, catchAsyncError(async (req,
     await campground.save()
 
     res.redirect(`/campgrounds/${campground._id}`)
+}))
+
+app.delete('/campgrounds/:id/reviews/:reviewId', catchAsyncError(async(req, res) => {
+    const {id, reviewId} = req.params;
+    const campground = await Campground.findById(id);
+
+    await Campground.findByIdAndUpdate(id, {$pull: {reviews: reviewId}})
+    await Review.findByIdAndDelete(reviewId);
+
+
+    res.redirect(`/campgrounds/${id}`)
 }))
 
 app.all('*', (req, res, next) => {

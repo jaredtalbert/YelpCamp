@@ -2,10 +2,11 @@ const mongoose = require('mongoose')
 const cities = require('./cities')
 const { descriptors, places } = require('./seedHelpers')
 const Campground = require('../models/campground')
+const Review = require('../models/review')
 
 const dbName = 'yelpcamp'
 
-mongoose.connect(`mongodb+srv://admin:admin123@cluster0.rphhm.mongodb.net/${dbName}?retryWrites=true&w=majority`, {
+mongoose.connect(`mongodb://localhost:27017/${dbName}`, {
     useNewUrlParser: true,
     useCreateIndex: true,
     useUnifiedTopology: true
@@ -21,6 +22,7 @@ const sample = array => array[Math.floor(Math.random() * array.length)]
 
 const seed = async () => {
     await Campground.deleteMany({})
+    await Review.deleteMany({})
 
     for (let i = 0; i < 50; i++) {
         const random1k = Math.floor(Math.random() * 1000);
