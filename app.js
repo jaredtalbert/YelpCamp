@@ -12,6 +12,7 @@ const AppError = require('./helpers/AppError')
 
 const campgrounds = require('./routes/campgrounds');
 const reviews = require('./routes/reviews');
+const userRoutes = require('./routes/users')
 
 const User = require('./models/user')
 
@@ -44,7 +45,7 @@ app.use(passport.session());
 
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 app.use((req, res, next) => {
     res.locals.success = req.flash('success');
@@ -52,6 +53,7 @@ app.use((req, res, next) => {
     next();
 })
 
+app.use('/', userRoutes);
 app.use('/campgrounds', campgrounds);
 app.use('/campgrounds/:id/reviews', reviews);
 
